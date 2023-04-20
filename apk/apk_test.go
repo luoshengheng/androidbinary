@@ -15,7 +15,7 @@ func TestParseAPKFile(t *testing.T) {
 	}
 	defer apk.Close()
 
-	icon, _, err := apk.Icon(nil)
+	icon, err := apk.Icon(nil)
 	assert.NoError(t, err)
 	assert.NotNil(t, icon)
 

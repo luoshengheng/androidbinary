@@ -13,6 +13,8 @@ import (
 
 	_ "image/jpeg" // handle jpeg format
 	_ "image/png"  // handle png format
+
+	_ "golang.org/x/image/webp" // handle webp format
 )
 
 // Apk is an application package file for android.
@@ -73,20 +75,20 @@ func (k *Apk) Close() error {
 }
 
 // Icon returns the icon image of the APK.
-func (k *Apk) Icon(resConfig *androidbinary.ResTableConfig) (image.Image, []byte, error) {
+func (k *Apk) Icon(resConfig *androidbinary.ResTableConfig) (image.Image, error) {
 	iconPath, err := k.manifest.App.Icon.WithResTableConfig(resConfig).String()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	if androidbinary.IsResID(iconPath) {
-		return nil, nil, newError("unable to convert icon-id to icon path")
+		return nil, newError("unable to convert icon-id to icon path")
 	}
 	imgData, err := k.readZipFile(iconPath)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	m, _, err := image.Decode(bytes.NewReader(imgData))
-	return m, imgData, err
+	return m, err
 }
 
 // Label returns the label of the APK.
